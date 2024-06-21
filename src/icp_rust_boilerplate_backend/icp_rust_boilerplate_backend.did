@@ -1,3 +1,32 @@
+type Book = record {
+  id : nat64;
+  title : text;
+  updated_at : opt nat64;
+  created_at : nat64;
+  author : text;
+  available : bool;
+};
+type BookPayload = record { title : text; author : text };
+type Error = variant {
+  AlreadyReturned : record { msg : text };
+  BookUnavailable : record { msg : text };
+  NotFound : record { msg : text };
+};
+type Rental = record {
+  id : nat64;
+  rented_at : nat64;
+  user_id : text;
+  book_id : nat64;
+  due_date : nat64;
+  returned_at : opt nat64;
+};
+type Result = variant { Ok : Book; Err : Error };
+type Result_1 = variant { Ok : Rental; Err : Error };
 service : {
-    "greet": (text) -> (text) query;
+  add_book : (BookPayload) -> (opt Book);
+  delete_book : (nat64) -> (Result);
+  get_book : (nat64) -> (Result) query;
+  rent_book : (nat64, text, nat64) -> (Result_1);
+  return_book : (nat64) -> (Result_1);
+  update_book : (nat64, BookPayload) -> (Result);
 }
